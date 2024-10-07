@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元宇宙地产大亨</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .game-container {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        .resource {
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+            padding: 10px;
+            background-color: #3a3a3a;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        .resource:hover {
+            background-color: #4a4a4a;
+        }
+        .resource:active {
+            transform: scale(0.98);
+        }
+        #gameOverContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        #gameOverMessage {
+            background-color: #2a2a2a;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="wallet">钱包: 0 元宇宙币</div>
+        <div id="landIncome">土地收入: 0 元宇宙币/秒</div>
+        <div id="buildingIncome">建筑收入: 0 元宇宙币/秒</div>
+        <div class="resource" onclick="buyLand()" id="landResource">购买土地</div>
+        <div class="resource" onclick="buyBuilding()" id="buildingResource">购买建筑</div>
+        <div class="resource" onclick="upgradeTech()" id="techResource">升级科技</div>
+        <div class="resource" onclick="rebirth()" id="rebirthButton">转生</div>
+    </div>
+    <div id="gameOverContainer">
+        <div id="gameOverMessage">
+            <h2>游戏结束</h2>
+            <p>你已经成功统治了元宇宙地产市场！</p>
+            <button onclick="restartGame()">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+        let wallet = 100; // 初始资金
+        let land = 0; // 土地数量
+        let building = 0; // 建筑数量
+        let landPrice = 50; // 土地价格
+        let buildingPrice = 500; // 建筑价格
+        let techLevel = 1; // 科技等级
+        let incomePerSecond = 0; // 每秒收入
+
+        function updateDisplay() {
+            document.getElementById('wallet').innerText = `钱包: ${wallet} 元宇宙币`;
+            document.getElementById('landIncome').innerText = `土地收入: ${land * 1 * techLevel} 元宇宙币/秒`;
+            document.getElementById('buildingIncome').innerText = `建筑收入: ${building * 5 * techLevel} 元宇宙币/秒`;
+            document.getElementById('landResource').innerText = `购买土地 (成本: ${landPrice} 元宇宙币)`;
+            document.getElementById('buildingResource').innerText = `购买建筑 (成本: ${buildingPrice} 元宇宙币)`;
+            document.getElementById('techResource').innerText = `升级科技 (成本: ${1000 * techLevel} 元宇宙币)`;
+            document.getElementById('rebirthButton').style.display = 'block';
+        }
+
+        function buyLand() {
+            if (wallet >= landPrice) {
+                wallet -= landPrice;
+                land++;
+                landPrice = Math.round(landPrice * 1.1);
+                calculateIncome();
+                updateDisplay();
+            }
+        }
+
+        function buyBuilding() {
+            if (wallet >= buildingPrice) {
+                wallet -= buildingPrice;
+                building++;
+                buildingPrice = Math.round(buildingPrice * 1.1);
+                calculateIncome();
+                updateDisplay();
+            }
+        }
+
+        function upgradeTech() {
+            if (wallet >= 1000 * techLevel) {
+                wallet -= 1000 * techLevel;
+                techLevel++;
+                updateDisplay();
+            }
+        }
+
+        function calculateIncome() {
+            incomePerSecond = (land * 1 * techLevel) + (building * 5 * techLevel);
+        }
+
+        function rebirth() {
+            wallet = 100;
+            land = 0;
+            building = 0;
+            landPrice = 50;
+            buildingPrice = 500;
+            techLevel = 1;
+            calculateIncome();
+            updateDisplay();
+        }
+
+        function restartGame() {
+            rebirth();
+            document.getElementById('gameOverContainer').style.display = 'none';
+        }
+
+        setInterval(() => {
+            wallet += incomePerSecond;
+            updateDisplay();
+        }, 1000);
+
+        updateDisplay();
+    </script>
+</body>
+</html>
